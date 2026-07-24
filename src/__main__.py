@@ -7,19 +7,37 @@ from .io import (
     parse_args,
     write_results,
 )
+from .llm import LLM
 
 
 def main() -> None:
     """Run the function calling pipeline."""
+
     args = parse_args()
 
-    functions = load_functions(args.functions_definition)
-    prompts = load_prompts(args.input)
+    functions = load_functions(
+        args.functions_definition
+    )
 
-    decoder = Decoder(functions)
-    results = decoder.process(prompts)
+    prompts = load_prompts(
+        args.input
+    )
 
-    write_results(args.output, results)
+    llm = LLM()
+
+    decoder = Decoder(
+        functions,
+        llm,
+    )
+
+    results = decoder.process(
+        prompts
+    )
+
+    write_results(
+        args.output,
+        results
+    )
 
 
 if __name__ == "__main__":

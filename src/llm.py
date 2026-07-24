@@ -25,3 +25,18 @@ class LLM:
     def get_vocab_path(self) -> str:
         """Return the vocabulary file path."""
         return self._model.get_path_to_vocab_file()
+
+    def get_next_token(self, token_ids: list[int]) -> int:
+        """
+        Return the token with the highest probability.
+
+        This will later be replaced by constrained
+        token selection using a mask.
+        """
+
+        logits = self.get_logits(token_ids)
+
+        return max(
+            range(len(logits)),
+            key=lambda i: logits[i]
+        )

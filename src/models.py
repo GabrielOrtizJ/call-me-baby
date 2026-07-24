@@ -35,3 +35,13 @@ class FunctionCall(BaseModel):
     prompt: str
     name: str
     parameters: dict[str, Any]
+
+
+class DecoderResult(BaseModel):
+    """
+    Represents a complete decoder output.
+
+    Used before writing the JSON file.
+    """
+
+    results: list[FunctionCall]
