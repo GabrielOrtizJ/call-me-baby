@@ -1,0 +1,57 @@
+[
+    {
+        "prompt": "What is the product of 3 and 5?",
+        "name": "fn_multiply_numbers",
+        "parameters": {}
+    },
+    {
+        "prompt": "What is the product of 12 and 4?",
+        "name": "fn_multiply_numbers",
+        "parameters": {}
+    },
+    {
+        "prompt": "Is 4 an even number?",
+        "name": "fn_multiply_numbers",
+        "parameters": {}
+    },
+    {
+        "prompt": "Is 7 an even number?",
+        "name": "fn_multiply_numbers",
+        "parameters": {}
+    },
+    {
+        "prompt": "Calculate compound interest on 1234567.89 at 0.0375 rate for 23 years",
+        "name": "fn_multiply_numbers",
+        "parameters": {}
+    },
+    {
+        "prompt": "Execute SQL query 'SELECT * FROM users' on the production database",
+        "name": "fn_multiply_numbers",
+        "parameters": {}
+    },
+    {
+        "prompt": "Run the query 'INSERT INTO logs VALUES (1, 2, 3)' on the system database",
+        "name": "fn_multiply_numbers",
+        "parameters": {}
+    },
+    {
+        "prompt": "Read the file at /home/user/data.json with utf-8 encoding",
+        "name": "fn_multiply_numbers",
+        "parameters": {}
+    },
+    {
+        "prompt": "Read C:\\Users\\john\\config.ini with latin-1 encoding",
+        "name": "fn_multiply_numbers",
+        "parameters": {}
+    },
+    {
+        "prompt": "Format template: Hello {user}'s profile!",
+        "name": "fn_multiply_numbers",
+        "parameters": {}
+    },
+    {
+        "prompt": "Format template: Say \"hello\" to {name}",
+        "name": "fn_multiply_numbers",
+        "parameters": {}
+    }
+]

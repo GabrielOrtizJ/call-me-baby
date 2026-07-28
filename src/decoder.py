@@ -51,7 +51,8 @@ class Decoder:
         """
         Decode one prompt.
         """
-
+        self.debug_functions()
+        self.debug_tokens()
         selected_function = self.select_function(
             prompt.prompt
         )
@@ -212,7 +213,6 @@ class Decoder:
                 "replacement": "",
             }
 
-
         return {}
 
     def _find(
@@ -229,3 +229,98 @@ class Decoder:
                 return function
 
         return self.functions[0]
+
+    def _next_token(
+        self,
+        input_ids: list[int],
+        allowed_tokens: list[int] | None = None,
+    ) -> int:
+        """
+        Return the next token using greedy decoding.
+        """
+
+        logits = self.llm.get_logits(input_ids)
+
+        if allowed_tokens is not None:
+            allowed = set(allowed_tokens)
+
+            for token_id in range(len(logits)):
+                if token_id not in allowed:
+                    logits[token_id] = float("-inf")
+
+        return max(
+            range(len(logits)),
+            key=lambda token: logits[token],
+        )
+
+    def _generate(
+        self,
+        prompt: str,
+        max_tokens: int = 30,
+        allowed_tokens: list[int] | None = None,
+    ) -> str:
+        """
+        Generate text token by token.
+        """
+
+        input_ids = self.llm.encode(prompt)
+
+        generated = []
+
+        for _ in range(max_tokens):
+
+            token = self._next_token(
+                input_ids,
+                allowed_tokens,
+            )
+
+            input_ids.append(token)
+            generated.append(token)
+
+            text = self.llm.decode(generated)
+
+            if "\n" in text:
+                break
+
+        return self.llm.decode(generated)
+
+    def debug_functions(self) -> None:
+        """
+        Show how function names are tokenized.
+        """
+
+        for function in self.functions:
+
+            ids = self.llm.encode(function.name)
+
+            print(f"{function.name}")
+            print(ids)
+            print(self.llm.decode(ids))
+            print()
+
+
+    def debug_tokens(self) -> None:
+        """
+        Show tokenization examples.
+        """
+
+        samples = [
+            "{",
+            "}",
+            ":",
+            ",",
+            "\"",
+            "true",
+            "false",
+            "123",
+            "hello",
+        ]
+
+        for sample in samples:
+
+            ids = self.llm.encode(sample)
+
+            print(sample)
+            print(ids)
+            print(self.llm.decode(ids))
+            print()
