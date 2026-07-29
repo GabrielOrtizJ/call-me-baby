@@ -1,42 +1,60 @@
-"""Wrapper around the provided LLM SDK."""
+"""LLM wrapper around Small_LLM_Model."""
+
+from __future__ import annotations
+
+from typing import List
+import json
+from pathlib import Path
 
 from llm_sdk import Small_LLM_Model
 
 
 class LLM:
-    """Simple wrapper for the language model."""
+    """Wrapper for the small LLM model."""
 
     def __init__(self) -> None:
-        """Initialize the language model."""
         self._model = Small_LLM_Model()
+        self.vocab = self._load_vocab()
 
-    def encode(self, text: str) -> list[int]:
-        """Encode text into token ids."""
-        return self._model.encode(text)[0].tolist()
+    def _load_vocab(self) -> dict[int, str]:
+        """
+        Load the vocabulary file provided by the SDK.
+        Maps token_id -> string.
+        """
+        path = self._model.get_path_to_vocab_file()
+        with open(path, "r", encoding="utf-8") as f:
+            data = json.load(f)
 
-    def decode(self, token_ids: list[int]) -> str:
-        """Decode token ids into text."""
+        # SDK usually gives {"token": id}, invert it
+        vocab = {}
+        for token, idx in data.items():
+            vocab[int(idx)] = token
+
+        return vocab
+
+    def encode(self, text: str) -> List[int]:
+        """
+        Encode text into a flat list[int].
+        The SDK returns a tensor shaped like [[ids]].
+        """
+        tensor = self._model.encode(text)
+
+        # Convert to Python list
+        ids = tensor.tolist()
+
+        # Flatten if needed
+        if isinstance(ids[0], list):
+            ids = ids[0]
+
+        return [int(x) for x in ids]
+
+    def decode(self, token_ids: List[int]) -> str:
+        """Decode token IDs back into text."""
         return self._model.decode(token_ids)
 
-    def get_logits(self, token_ids: list[int]) -> list[float]:
-        """Return the logits for the next token."""
-        return self._model.get_logits_from_input_ids(token_ids)
-
-    def get_vocab_path(self) -> str:
-        """Return the vocabulary file path."""
-        return self._model.get_path_to_vocab_file()
-
-    def get_next_token(self, token_ids: list[int]) -> int:
+    def get_logits(self, input_ids: List[int]) -> List[float]:
         """
-        Return the token with the highest probability.
-
-        This will later be replaced by constrained
-        token selection using a mask.
+        Get logits for the next token.
+        Must receive List[int], not nested lists.
         """
-
-        logits = self.get_logits(token_ids)
-
-        return max(
-            range(len(logits)),
-            key=lambda i: logits[i]
-        )
+        return self._model.get_logits_from_input_ids(input_ids)
