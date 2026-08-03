@@ -43,7 +43,7 @@
         "name": "fn_execute_sql_query",
         "parameters": {
             "query": "SELECT * FROM users",
-            "database": "Execute SQL query 'SELECT * FROM users' on the production database"
+            "database": "production"
         }
     },
     {
@@ -51,7 +51,7 @@
         "name": "fn_execute_sql_query",
         "parameters": {
             "query": "INSERT INTO logs VALUES (1, 2, 3)",
-            "database": "Run the query 'INSERT INTO logs VALUES (1, 2, 3)' on the system database"
+            "database": "system"
         }
     },
     {
@@ -59,29 +59,29 @@
         "name": "fn_read_file",
         "parameters": {
             "path": "/home/user/data.json",
-            "encoding": "Read the file at /home/user/data.json with utf-8 encoding"
+            "encoding": "utf-8"
         }
     },
     {
         "prompt": "Read C:\\Users\\john\\config.ini with latin-1 encoding",
         "name": "fn_read_file",
         "parameters": {
-            "path": "Read C:\\Users\\john\\config.ini with latin-1 encoding",
-            "encoding": "Read C:\\Users\\john\\config.ini with latin-1 encoding"
+            "path": "C:\\Users\\john\\config.ini",
+            "encoding": "latin-1"
         }
     },
     {
         "prompt": "Format template: Hello {user}'s profile!",
         "name": "fn_format_template",
         "parameters": {
-            "template": "Format template: Hello {user}'s profile!"
+            "template": "Hello {user}'s profile!"
         }
     },
     {
         "prompt": "Format template: Say \"hello\" to {name}",
         "name": "fn_format_template",
         "parameters": {
-            "template": "hello"
+            "template": "Say \"hello\" to {name}"
         }
     }
 ]

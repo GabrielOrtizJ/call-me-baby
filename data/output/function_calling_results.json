@@ -19,14 +19,14 @@
         "prompt": "Greet shrek",
         "name": "fn_greet",
         "parameters": {
-            "name": "Greet shrek"
+            "name": "shrek"
         }
     },
     {
         "prompt": "Greet john",
         "name": "fn_greet",
         "parameters": {
-            "name": "Greet john"
+            "name": "john"
         }
     },
     {
@@ -69,8 +69,8 @@
         "name": "fn_substitute_string_with_regex",
         "parameters": {
             "source_string": "Programming is fun",
-            "regex": "Replace all vowels in 'Programming is fun' with asterisks",
-            "replacement": "Replace all vowels in 'Programming is fun' with asterisks"
+            "regex": "asterisks",
+            "replacement": "asterisks"
         }
     },
     {
