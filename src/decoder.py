@@ -61,10 +61,6 @@ class Decoder:
             parameters=params,
         )
 
-    # ------------------------------------------------------------
-    # FUNCTION SELECTION (your original constrained decoding)
-    # ------------------------------------------------------------
-
     def _select_function(self, text: str) -> FunctionDefinition:
         prompt = self._build_function_prompt(text)
         input_ids = self.llm.encode(prompt)
@@ -121,10 +117,6 @@ class Decoder:
         ])
         return "\n".join(lines)
 
-    # ------------------------------------------------------------
-    # PARAMETER EXTRACTION (NO IA, deterministic)
-    # ------------------------------------------------------------
-
     def _extract_parameters(self, text: str, fn: FunctionDefinition) -> dict:
         params: dict[str, object] = {}
 
@@ -142,20 +134,20 @@ class Decoder:
             r"(\/[\w\/\.\-]+|[A-Za-z]:\\\\[\w\\\\\.\-]+)", text,)
         path_index = 0
 
-        # Extract SQL-like fragments (even without ;)
+        # Extract SQL-like fragments (even without semicolon)
         sql = re.findall(
-            r"(SELECT .*?FROM .*|INSERT .*?VALUES .*|UPDATE .*?SET .*|DELETE .*?FROM .*)",
+            r"(SELECT .*?FROM .*"
+            r"|INSERT .*?VALUES .*"
+            r"|UPDATE .*?SET .*"
+            r"|DELETE .*?FROM .*)",
             text,
             re.IGNORECASE,
         )
+
         sql_index = 0
 
         # Fallback: last word
         fallback = text.split()[-1]
-
-        # ------------------------------------------------------------
-        # SPECIAL CASES PER FUNCTION (moulinette patterns)
-        # ------------------------------------------------------------
 
         # fn_execute_sql_query(query: string, database: string)
         if fn.name == "fn_execute_sql_query":
@@ -202,14 +194,9 @@ class Decoder:
                 "template": template,
             }
 
-        # ------------------------------------------------------------
-        # GENERIC CASE (other functions)
-        # ------------------------------------------------------------
-
         for name, param in fn.parameters.items():
             ptype = param.type.lower()
 
-            # NUMBER
             if ptype == "number":
                 if num_index < len(numbers):
                     params[name] = float(numbers[num_index])
@@ -217,7 +204,6 @@ class Decoder:
                 else:
                     params[name] = 0.0
 
-            # INTEGER
             elif ptype == "integer":
                 if num_index < len(numbers):
                     params[name] = int(float(numbers[num_index]))
@@ -225,7 +211,6 @@ class Decoder:
                 else:
                     params[name] = 0
 
-            # STRING
             elif ptype == "string":
                 # 1. SQL fragment
                 if sql_index < len(sql):
@@ -248,7 +233,6 @@ class Decoder:
                 # 4. Fallback: last word
                 params[name] = fallback
 
-            # BOOLEAN
             elif ptype == "boolean":
                 params[name] = "true" in text.lower()
 
@@ -256,4 +240,3 @@ class Decoder:
                 params[name] = None
 
         return params
-

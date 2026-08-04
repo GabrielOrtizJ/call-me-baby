@@ -1,11 +1,7 @@
 """LLM wrapper around Small_LLM_Model."""
 
-from __future__ import annotations
-
 from typing import List
 import json
-from pathlib import Path
-
 from llm_sdk import Small_LLM_Model
 
 
@@ -42,7 +38,6 @@ class LLM:
         # Convert to Python list
         ids = tensor.tolist()
 
-        # Flatten if needed
         if isinstance(ids[0], list):
             ids = ids[0]
 
