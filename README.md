@@ -215,7 +215,7 @@ Certain functions (SQL, templates, file paths, etc.) require additional parsing 
 |---------|--------|
 | Function selection | 100% |
 | JSON validity | 100% |
-| Deterministic execution | ✅ |
+| Speed | Fast |
 | Argument extraction | ~90%+ |
 
 Processes dozens of prompts in well under a second on standard hardware.
@@ -281,31 +281,6 @@ AI assistance was limited to:
 - Improving documentation
 
 No AI-generated code was used without review and adaptation.
-
----
-
-# 💻 Example
-
-### Input
-
-```json
-{
-    "prompt": "What is the product of 3 and 5?"
-}
-```
-
-### Output
-
-```json
-{
-    "prompt": "What is the product of 3 and 5?",
-    "name": "fn_multiply_numbers",
-    "parameters": {
-        "a": 3.0,
-        "b": 5.0
-    }
-}
-```
 
 ---
 

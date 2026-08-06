@@ -1,6 +1,6 @@
 """Constrained decoder for function calling."""
 from __future__ import annotations
-
+from .llm import LLM
 from typing import List
 import re
 
@@ -45,10 +45,20 @@ class TokenTree:
 class Decoder:
     """Main constrained decoder."""
 
-    def __init__(self, functions: List[FunctionDefinition], llm) -> None:
+    def __init__(self, functions: List[FunctionDefinition], llm: LLM) -> None:
+
         self.functions = functions
         self.llm = llm
         self.function_tree = self._build_function_tree()
+
+    def _next_token(self, input_ids: List[int],
+                    allowed_tokens: List[int]) -> int:
+        logits = self.llm.get_logits(input_ids)
+        allowed = set(allowed_tokens)
+        for token_id in range(len(logits)):
+            if token_id not in allowed:
+                logits[token_id] = float("-inf")
+        return max(range(len(logits)), key=lambda t: logits[t])
 
     def process(self, prompts: List[Prompt]) -> List[FunctionCall]:
         return [self.decode(prompt) for prompt in prompts]
@@ -94,15 +104,6 @@ class Decoder:
             token_ids = self.llm.encode(fn.name)
             tree.insert(token_ids, fn.name)
         return tree
-
-    def _next_token(self, input_ids: list[int],
-                    allowed_tokens: list[int]) -> int:
-        logits = self.llm.get_logits(input_ids)
-        allowed = set(allowed_tokens)
-        for token_id in range(len(logits)):
-            if token_id not in allowed:
-                logits[token_id] = float("-inf")
-        return max(range(len(logits)), key=lambda t: logits[t])
 
     def _build_function_prompt(self, text: str) -> str:
         lines = ["Available functions:", ""]

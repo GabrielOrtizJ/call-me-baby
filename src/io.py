@@ -4,7 +4,7 @@ from __future__ import annotations
 import argparse
 import json
 from pathlib import Path
-
+from typing import cast, List, Dict, Any
 from .models import FunctionCall
 from .models import FunctionDefinition
 from .models import Prompt
@@ -98,13 +98,9 @@ def _load_json(path: str) -> list[dict]:
     """Load a JSON file."""
 
     try:
-
-        with open(
-            path,
-            encoding="utf-8",
-        ) as file:
-
-            return json.load(file)
+        with open(path, encoding="utf-8") as file:
+            data = json.load(file)
+            return cast(List[Dict[str, Any]], data)
 
     except FileNotFoundError as exc:
 

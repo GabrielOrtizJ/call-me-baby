@@ -1,7 +1,7 @@
 """LLM wrapper around Small_LLM_Model."""
 from __future__ import annotations
 
-from typing import List
+from typing import List, cast
 import json
 from llm_sdk import Small_LLM_Model
 
@@ -46,11 +46,13 @@ class LLM:
 
     def decode(self, token_ids: List[int]) -> str:
         """Decode token IDs back into text."""
-        return self._model.decode(token_ids)
+        return cast(str, self._model.decode(token_ids))
 
     def get_logits(self, input_ids: List[int]) -> List[float]:
         """
         Get logits for the next token.
         Must receive List[int], not nested lists.
         """
-        return self._model.get_logits_from_input_ids(input_ids)
+        return cast(
+            List[float], self._model.get_logits_from_input_ids(input_ids)
+            )
