@@ -1,4 +1,5 @@
 """LLM wrapper around Small_LLM_Model."""
+from __future__ import annotations
 
 from typing import List
 import json

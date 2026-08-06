@@ -1,4 +1,5 @@
 """Constrained decoder for function calling."""
+from __future__ import annotations
 
 from typing import List
 import re

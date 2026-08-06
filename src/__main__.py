@@ -1,4 +1,5 @@
 """Entry point of the project."""
+from __future__ import annotations
 
 from .decoder import Decoder
 from .io import (
